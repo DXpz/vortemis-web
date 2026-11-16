@@ -27,6 +27,11 @@ function showScreen(name) {
     if (node) node.hidden = screen !== name;
   }
   window.scrollTo(0, 0);
+
+  if (name === "home") {
+    measureHero();
+    updateHeroFade();
+  }
 }
 
 function handleError(error) {
@@ -151,13 +156,39 @@ for (const tab of $$(".nav-item")) {
 $("#api-label").textContent = API_BASE;
 
 const siteNav = document.querySelector(".site-nav");
+const heroTitle = document.querySelector(".hero h1");
+const heroSection = heroTitle?.closest(".hero");
+let heroFadeDistance = 1;
 
-function updateSiteNav() {
-  if (!siteNav) return;
-  siteNav.classList.toggle("is-scrolled", window.scrollY > 48);
+function measureHero() {
+  const height = heroSection?.offsetHeight || window.innerHeight;
+  heroFadeDistance = Math.max(height * 0.55, 1);
 }
 
+function updateHeroFade() {
+  if (!heroTitle) return;
+
+  const progress = Math.min(Math.max(window.scrollY / heroFadeDistance, 0), 1);
+  heroTitle.style.opacity = String(1 - progress);
+  heroTitle.style.transform = `translate3d(0, ${(-progress * 20).toFixed(1)}px, 0)`;
+  heroTitle.style.visibility = progress >= 1 ? "hidden" : "visible";
+}
+
+function updateSiteNav() {
+  if (siteNav) siteNav.classList.toggle("is-scrolled", window.scrollY > 48);
+  updateHeroFade();
+}
+
+measureHero();
 window.addEventListener("scroll", updateSiteNav, { passive: true });
+window.addEventListener(
+  "resize",
+  () => {
+    measureHero();
+    updateHeroFade();
+  },
+  { passive: true },
+);
 updateSiteNav();
 
 (async function boot() {
