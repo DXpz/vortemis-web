@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vortemis · Passive network telemetry</title>
+  <meta name="description" content="Vortemis reads Zeek and tshark flows, scores them with an autoencoder and maps them to MITRE ATT&CK.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@200;300;400&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.169.0/build/three.module.js"
+      }
+    }
+  </script>
+</head>
+<body>
+  <canvas id="scene" aria-hidden="true"></canvas>
+
+  <div id="home" class="page">
+    <header class="site-nav">
+      <div class="nav-side">
+        <a href="#what">ENGINE</a>
+        <a href="#how">PIPELINE</a>
+        <a href="#detects">DETECTIONS</a>
+      </div>
+
+      <a class="wordmark" href="#" data-goto="home">VORTEMIS</a>
+
+      <div class="nav-side nav-side-right">
+        <a href="#faq">FAQ</a>
+        <a href="https://github.com/Geovanny001/Vortemis.io/blob/develop/docs/CONTRACTS.md" target="_blank" rel="noreferrer">CONTRACT</a>
+        <button class="login-icon" data-goto="login" aria-label="Sign in" title="Sign in">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>
+            <path d="M3 12h11"/>
+            <path d="M10 8l4 4-4 4"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="kicker">PASSIVE NETWORK TELEMETRY</p>
+        <h1>Watch the network<br>without touching it.</h1>
+        <p class="lead">
+          Vortemis reads the connection logs your infrastructure already
+          produces, scores every flow with an autoencoder and maps the ones
+          that matter to MITRE ATT&amp;CK. It never inspects payloads and never
+          sits in the traffic path.
+        </p>
+
+        <div class="hero-actions">
+          <button data-goto="login">OPEN CONSOLE</button>
+          <a class="ghost-link" href="https://github.com/Geovanny001/Vortemis.io/blob/develop/docs/CONTRACTS.md" target="_blank" rel="noreferrer">READ THE CONTRACT</a>
+        </div>
+
+        <div class="terminal">
+          <div class="terminal-tabs">
+            <span class="is-active">REST</span>
+            <span>PYTHON</span>
+            <span>SHELL</span>
+          </div>
+          <pre class="terminal-body">curl -s "$API/v1/flows?limit=50" \
+  -H "Authorization: Bearer $TOKEN"</pre>
+        </div>
+      </div>
+
+      <figure class="hero-art">
+        <pre class="ascii" data-ascii="map"></pre>
+        <pre class="ascii stars" data-ascii="stars" aria-hidden="true"></pre>
+        <figcaption class="mono">[ FIG. 01 ] FLOW TO TACTIC</figcaption>
+      </figure>
+    </section>
+
+    <div class="ticker mono">
+      ZEEK · TSHARK · PYTORCH · POSTGRESQL · MITRE ATT&amp;CK · FASTAPI
+    </div>
+
+    <section class="section" id="what">
+      <p class="statement">
+        Vortemis is a passive SOC telemetry engine. It runs beside your data,
+        never in the traffic path, and turns ordinary connection records into
+        scored, mapped and queryable detections.
+      </p>
+
+      <div class="columns">
+        <article>
+          <span class="num">WHAT IT DOES</span>
+          <h3>Read, score, map, store</h3>
+          <p>
+            Ingests Zeek <code>conn.log</code> or a live tshark capture, builds
+            a six-feature vector per flow, scores it with an autoencoder, maps
+            anomalies to five MITRE tactics and writes the result to PostgreSQL.
+          </p>
+        </article>
+        <article>
+          <span class="num">WHAT IT DOES NOT</span>
+          <h3>No payloads, no agents</h3>
+          <p>
+            No packet bodies, no host agents, no inline blocking and no packet
+            storage. Only Layer 3 and 4 metadata leaves the sensor, and the
+            engine only reads what the flow record already contains.
+          </p>
+        </article>
+        <article>
+          <span class="num">WHO IT IS FOR</span>
+          <h3>Teams that already run Zeek</h3>
+          <p>
+            SOC analysts triaging suspicious flows, network engineers with
+            existing sensor output, and detection engineers who want a
+            versioned contract instead of a black box.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <div class="section-head">
+        <p class="kicker">[ 01 ] PIPELINE</p>
+        <h2>Four steps, one pass.</h2>
+      </div>
+
+      <div class="columns four">
+        <article>
+          <span class="num">01 INGEST</span>
+          <h3>Zeek or tshark</h3>
+          <p>
+            TSV or JSON connection logs, or a live sensor. Byte offsets are
+            persisted, flow ids are deterministic and inserts are conflict-safe.
+          </p>
+        </article>
+        <article>
+          <span class="num">02 SCORE</span>
+          <h3>Six features</h3>
+          <p>
+            Inter-arrival time, forward and backward bytes, duration, ratio and
+            failed state. The autoencoder reconstructs and the error becomes a
+            probability around the 95th percentile.
+          </p>
+        </article>
+        <article>
+          <span class="num">03 MAP</span>
+          <h3>Five tactics</h3>
+          <p>
+            Explicit network rules assign a MITRE tactic only to flows above
+            the configured threshold, so every label can be explained.
+          </p>
+        </article>
+        <article>
+          <span class="num">04 SERVE</span>
+          <h3>Store and query</h3>
+          <p>
+            A PostgreSQL star schema behind a versioned <code>/v1</code> with
+            filters, keyset pagination and SQL aggregations.
+          </p>
+        </article>
+      </div>
+
+      <pre class="ascii pipeline-art" data-ascii="pipeline"></pre>
+    </section>
+
+    <section class="section" id="detects">
+      <div class="section-head">
+        <p class="kicker">[ 02 ] DETECTIONS</p>
+        <h2>What it maps.</h2>
+      </div>
+
+      <table class="data tactics">
+        <thead>
+          <tr>
+            <th>Tactic</th>
+            <th>ID</th>
+            <th>Signal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Exfiltration</td>
+            <td class="mono">TA0010</td>
+            <td>Completed connection, outbound ratio above 0.60 and forward volume above 25 KB.</td>
+          </tr>
+          <tr>
+            <td>Lateral Movement</td>
+            <td class="mono">TA0008</td>
+            <td>Private source and destination on SSH, RDP, SMB, WinRM or RPC.</td>
+          </tr>
+          <tr>
+            <td>Impact</td>
+            <td class="mono">TA0040</td>
+            <td>Inter-arrival under 2 ms with a failed or abnormal connection state.</td>
+          </tr>
+          <tr>
+            <td>Reconnaissance</td>
+            <td class="mono">TA0043</td>
+            <td>Connection attempt or rejection, no response bytes and short duration.</td>
+          </tr>
+          <tr>
+            <td>Command and Control</td>
+            <td class="mono">TA0011</td>
+            <td>Low-volume short-interval traffic or common C2 ports.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="fineprint">
+        Rules are evaluated only for flows above <code>epsilon</code>. They are
+        deliberately simple, documented in the repository and testable.
+      </p>
+    </section>
+
+    <section class="section" id="console">
+      <div class="section-head center">
+        <p class="kicker">[ 03 ] CONSOLE</p>
+        <h2>The reference client.</h2>
+      </div>
+
+      <figure class="shot">
+        <div class="shot-frame">
+          <img src="assets/console-overview.png" alt="Vortemis console overview" onerror="this.remove()">
+          <span class="mono">[ SCREENSHOT ] CONSOLE / OVERVIEW</span>
+        </div>
+        <figcaption class="mono">[ FIG. 02 ] RUNNING CONSOLE · 1600 × 1000</figcaption>
+      </figure>
+
+      <div class="columns">
+        <article>
+          <span class="num">OVERVIEW</span>
+          <h3>Flows, anomalies, tactics</h3>
+          <p>Totals, anomaly rate, tactic distribution, top sources and a five-minute timeline.</p>
+        </article>
+        <article>
+          <span class="num">FLOWS</span>
+          <h3>Forensic table</h3>
+          <p>Filter by tactic, protocol, source and probability with cursor pagination.</p>
+        </article>
+        <article>
+          <span class="num">ADMIN</span>
+          <h3>Operator actions</h3>
+          <p>Telemetry purge and password rotation, restricted to the admin role.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="interfaces">
+      <div class="section-head">
+        <p class="kicker">[ 04 ] INTERFACES</p>
+        <h2>Everything goes through one contract.</h2>
+      </div>
+
+      <div class="interfaces">
+        <div>
+          <h3>HTTP /v1</h3>
+          <ul class="endpoints">
+            <li><span class="method">GET</span> /v1/health</li>
+            <li><span class="method">POST</span> /v1/auth/login</li>
+            <li><span class="method">POST</span> /v1/auth/refresh</li>
+            <li><span class="method">GET</span> /v1/flows</li>
+            <li><span class="method">GET</span> /v1/stats/summary</li>
+            <li><span class="method">GET</span> /v1/stats/top-sources</li>
+            <li><span class="method">GET</span> /v1/stats/timeline</li>
+            <li><span class="method">GET</span> /v1/engine/metadata</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3>Access</h3>
+          <p>
+            Operators authenticate against the engine. The API returns a
+            bearer access token for fifteen minutes and a refresh token for
+            thirty days; rotation revokes the previous pair and reusing an old
+            refresh token closes the session.
+          </p>
+          <p>
+            The OpenAPI document ships as an asset with every release, so a
+            frontend can pin a version and generate its client from it.
+          </p>
+        </div>
+
+        <div>
+          <h3>Other surfaces</h3>
+          <ul class="endpoints">
+            <li><span class="method">TUI</span> python -m vortemis.entrypoints.tui</li>
+            <li><span class="method">CLI</span> python -m vortemis.entrypoints.cli</li>
+            <li><span class="method">DOCS</span> /docs on the API process</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="run">
+      <div class="section-head">
+        <p class="kicker">[ 05 ] RUN IT</p>
+        <h2>Two containers and a database.</h2>
+      </div>
+
+      <div class="run">
+        <pre class="code">git clone https://github.com/Geovanny001/Vortemis.io.git
+cd Vortemis.io
+docker compose up --build
+
+# console  http://localhost:8501
+# api      http://localhost:8000
+# docs     http://localhost:8000/docs</pre>
+
+        <ul class="requirements">
+          <li><span>Runtime</span><b>Python 3.14 or Docker</b></li>
+          <li><span>Storage</span><b>PostgreSQL 16</b></li>
+          <li><span>Telemetry</span><b>Zeek conn.log or tshark</b></li>
+          <li><span>Model</span><b>Shipped checkpoint</b></li>
+          <li><span>Schema</span><b>Alembic migrations</b></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="section-head">
+        <p class="kicker">[ 06 ] FAQ</p>
+        <h2>Questions we get.</h2>
+      </div>
+
+      <div class="faq">
+        <details>
+          <summary>Does it inspect payloads?</summary>
+          <p>No. Vortemis only reads connection metadata: addresses, ports, bytes, duration, inter-arrival time and connection state.</p>
+        </details>
+        <details>
+          <summary>Where does detection run?</summary>
+          <p>On the engine, next to the database. Presentations consume HTTP and never touch the model or PostgreSQL.</p>
+        </details>
+        <details>
+          <summary>Is the model calibrated for real traffic?</summary>
+          <p>Not yet. The current checkpoint is a documented baseline; calibration and behavioural features are an open workstream.</p>
+        </details>
+        <details>
+          <summary>Can a frontend use it?</summary>
+          <p>Yes. The contract is versioned, documented and shipped as an OpenAPI file with every release.</p>
+        </details>
+        <details>
+          <summary>What happens if the log is truncated or rotated?</summary>
+          <p>The ingestion checkpoint detects it and restarts from the beginning. Deterministic flow ids prevent duplicates.</p>
+        </details>
+      </div>
+    </section>
+
+    <pre class="ascii stars wide" data-ascii="stars" aria-hidden="true"></pre>
+
+    <section class="access" id="access">
+      <div>
+        <p class="kicker">[ 07 ] ACCESS</p>
+        <h2>Operator access.</h2>
+      </div>
+      <button class="login-cta" data-goto="login">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
+          <path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>
+          <path d="M3 12h11"/>
+          <path d="M10 8l4 4-4 4"/>
+        </svg>
+        SIGN IN
+      </button>
+    </section>
+
+    <footer class="site-footer">
+      <div>
+        <span>ENGINE</span>
+        <a href="https://github.com/Geovanny001/Vortemis.io" target="_blank" rel="noreferrer">SOURCE</a>
+        <a href="https://github.com/Geovanny001/Vortemis.io/blob/develop/docs/CONTRACTS.md" target="_blank" rel="noreferrer">CONTRACT</a>
+        <a href="https://github.com/Geovanny001/Vortemis.io/releases" target="_blank" rel="noreferrer">RELEASES</a>
+      </div>
+      <div>
+        <span>RUNTIME</span>
+        <span>PYTHON 3.14</span>
+        <span>POSTGRESQL 16</span>
+        <span>FASTAPI</span>
+      </div>
+      <div>
+        <span>STATE</span>
+        <span>ACTIVE DEVELOPMENT</span>
+        <span id="api-label"></span>
+      </div>
+    </footer>
+  </div>
+
+  <section id="login" class="login" hidden>
+    <div class="login-top">
+      <button class="back-link" data-goto="home">← BACK</button>
+      <span class="mono muted">OPERATOR ACCESS</span>
+    </div>
+
+    <div class="login-grid">
+      <div class="login-intro">
+        <p class="kicker">RESTRICTED</p>
+        <h1>Vortemis<span>.io</span></h1>
+        <p class="lead">
+          Sign in with an operator account to inspect flows, tactics and engine
+          state. Sessions are short-lived and revocable.
+        </p>
+        <dl class="facts">
+          <div><dt>Session</dt><dd>15 min access · 30 day refresh</dd></div>
+          <div><dt>Transport</dt><dd>Bearer token</dd></div>
+          <div><dt>Scope</dt><dd>Read · admin writes</dd></div>
+        </dl>
+      </div>
+
+      <form id="login-form" class="login-form" novalidate>
+        <label>
+          <span>Username</span>
+          <input name="username" autocomplete="username" required>
+        </label>
+        <label>
+          <span>Password</span>
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <button type="submit" id="login-submit">SIGN IN</button>
+        <p id="login-error" class="error" role="alert"></p>
+      </form>
+    </div>
+  </section>
+
+  <div id="app" class="app" hidden>
+    <header class="masthead">
+      <div class="masthead-top">
+        <div class="wordmark">VORTEMIS<span>.IO</span></div>
+        <div class="masthead-meta">
+          <span id="engine-badge" class="mono">engine …</span>
+          <span id="user-label" class="mono"></span>
+          <button class="link" id="logout">SIGN OUT</button>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Sections">
+        <button class="nav-item is-active" data-view="overview">01 — OVERVIEW</button>
+        <button class="nav-item" data-view="flows">02 — FLOWS</button>
+        <button class="nav-item" id="tab-admin" data-view="admin" hidden>03 — ADMIN</button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="view is-active" id="view-overview">
+        <div class="stats">
+          <div class="stat">
+            <span>Flows</span>
+            <strong id="kpi-flows">…</strong>
+          </div>
+          <div class="stat">
+            <span>Anomalies</span>
+            <strong id="kpi-anomalies">…</strong>
+          </div>
+          <div class="stat">
+            <span>Anomaly rate</span>
+            <strong id="kpi-rate">…</strong>
+          </div>
+        </div>
+
+        <div class="split">
+          <section class="panel">
+            <h2>Tactics</h2>
+            <ol class="rank" id="tactics"></ol>
+          </section>
+
+          <section class="panel">
+            <h2>Top sources</h2>
+            <table class="data" id="sources-table">
+              <thead>
+                <tr>
+                  <th>Address</th>
+                  <th class="num">Flows</th>
+                  <th class="num">Anomalies</th>
+                </tr>
+              </thead>
+              <tbody id="sources"></tbody>
+            </table>
+          </section>
+        </div>
+
+        <section class="panel wide">
+          <div class="panel-head">
+            <h2>Timeline</h2>
+            <span class="mono muted">FIVE-MINUTE BUCKETS · ANOMALIES ABOVE 0.70</span>
+          </div>
+          <div class="chart-host" id="timeline-host"></div>
+          <div class="chart-axis mono" id="timeline-axis">
+            <span id="axis-start"></span>
+            <span id="axis-peak"></span>
+            <span id="axis-end"></span>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-flows" hidden>
+        <form class="filters" id="flow-filters">
+          <label>
+            <span>Tactic</span>
+            <select name="tactic">
+              <option value="">Any</option>
+              <option value="TA0010">Exfiltration</option>
+              <option value="TA0008">Lateral Movement</option>
+              <option value="TA0011">Command and Control</option>
+              <option value="TA0040">Impact</option>
+              <option value="TA0043">Reconnaissance</option>
+            </select>
+          </label>
+          <label>
+            <span>Protocol</span>
+            <select name="protocol">
+              <option value="">Any</option>
+              <option value="tcp">TCP</option>
+              <option value="udp">UDP</option>
+              <option value="icmp">ICMP</option>
+            </select>
+          </label>
+          <label>
+            <span>Source IP</span>
+            <input name="src_ip" placeholder="192.168.1.10">
+          </label>
+          <label class="range">
+            <span>Min probability</span>
+            <input type="range" name="min_probability" min="0" max="1" step="0.05" value="0.7">
+            <output id="probability-output">0.70</output>
+          </label>
+          <label>
+            <span>Page size</span>
+            <select name="limit">
+              <option value="25">25</option>
+              <option value="50" selected>50</option>
+              <option value="100">100</option>
+            </select>
+          </label>
+          <button type="submit">APPLY</button>
+        </form>
+
+        <div class="table-wrap">
+          <table class="data flows">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Source</th>
+                <th>Destination</th>
+                <th>Proto</th>
+                <th class="num">P(anomaly)</th>
+                <th>Tactic</th>
+              </tr>
+            </thead>
+            <tbody id="flows-body"></tbody>
+          </table>
+        </div>
+
+        <div class="pager">
+          <button class="link" id="prev-page" disabled>PREVIOUS</button>
+          <span class="mono muted" id="page-label">No pages loaded</span>
+          <button class="link" id="next-page" disabled>NEXT</button>
+        </div>
+      </section>
+
+      <section class="view" id="view-admin" hidden>
+        <div class="split">
+          <section class="panel">
+            <h2>Purge telemetry</h2>
+            <p class="muted">
+              Truncates flow facts, clears the ingestion checkpoint and rewrites the log.
+              This cannot be undone.
+            </p>
+            <button class="danger" id="purge">PURGE TELEMETRY</button>
+          </section>
+
+          <section class="panel">
+            <h2>Rotate operator password</h2>
+            <form id="rotate-form" class="stack">
+              <label>
+                <span>Username</span>
+                <input name="username" autocomplete="off" required>
+              </label>
+              <label>
+                <span>New password</span>
+                <input name="password" type="password" minlength="12" autocomplete="new-password" required>
+              </label>
+              <label>
+                <span>Role</span>
+                <select name="role">
+                  <option value="">Keep current</option>
+                  <option value="admin">admin</option>
+                  <option value="analyst">analyst</option>
+                </select>
+              </label>
+              <button type="submit">ROTATE PASSWORD</button>
+            </form>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer mono">
+      <span>VORTEMIS.IO CONSOLE</span>
+      <button class="link" id="back-home">← HOME</button>
+    </footer>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
