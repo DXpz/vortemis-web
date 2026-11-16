@@ -225,11 +225,17 @@ h3 {
 /* Hero */
 
 .hero {
-  display: block;
-  padding: 19vh 0 21vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: calc(100vh - 82px);
+  min-height: calc(100svh - 82px);
+  padding: 0;
 }
 
 .hero h1 {
+  margin: 0 auto;
   max-width: 18ch;
   font-size: clamp(56px, 8vw, 132px);
   line-height: 0.88;
