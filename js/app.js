@@ -151,11 +151,6 @@ for (const tab of $$(".nav-item")) {
 $("#api-label").textContent = API_BASE;
 
 const siteNav = document.querySelector(".site-nav");
-const navRule = document.querySelector(".nav-rule");
-
-if (navRule) {
-  navRule.textContent = "~~~.~~~*~~~+~~~.~~~*~~~[~~+~~]~~~.~~~*~~~+".repeat(60);
-}
 
 function updateSiteNav() {
   if (!siteNav) return;

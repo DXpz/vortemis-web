@@ -38,6 +38,9 @@ export const ASCII = {
 |                       passive network telemetry, no payloads                  |
 +-------------------------------------------------------------------------------+`,
 
+  // Repeating motif for horizontal dividers; repeat to fill the available width.
+  rule: String.raw`~~~.~~~*~~~+~~~.~~~*~~~[~~+~~]~~~.~~~*~~~+`,
+
   stars: String.raw`     .         *                    +   * .
       +                                   *  *     +       .
      *     *.+           .    .     +           *+*      .
