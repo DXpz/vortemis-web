@@ -150,6 +150,16 @@ for (const tab of $$(".nav-item")) {
 
 $("#api-label").textContent = API_BASE;
 
+const siteNav = document.querySelector(".site-nav");
+
+function updateSiteNav() {
+  if (!siteNav) return;
+  siteNav.classList.toggle("is-scrolled", window.scrollY > 48);
+}
+
+window.addEventListener("scroll", updateSiteNav, { passive: true });
+updateSiteNav();
+
 (async function boot() {
   if (!tokens.access && !tokens.refresh) {
     showScreen("home");
