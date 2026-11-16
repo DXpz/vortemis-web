@@ -19,6 +19,12 @@ for (const node of $$("[data-ascii]")) {
   node.textContent = ASCII[node.dataset.ascii] ?? "";
 }
 
+const ticker = document.querySelector(".ticker");
+
+if (ticker) {
+  ticker.textContent = ASCII.rule.repeat(40);
+}
+
 startScene();
 
 function showScreen(name) {

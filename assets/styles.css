@@ -355,14 +355,13 @@ h3 {
 /* Ticker */
 
 .ticker {
-  padding: 13px 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
-  color: var(--faint);
-  font-size: 9.5px;
-  letter-spacing: 0.26em;
+  padding: 20px 0;
+  color: rgba(196, 181, 253, 0.45);
+  font-size: 12px;
+  letter-spacing: 0.05em;
   white-space: nowrap;
   overflow: hidden;
+  user-select: none;
 }
 
 /* Sections */
