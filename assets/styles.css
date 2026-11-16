@@ -205,16 +205,14 @@ h3 {
 /* Hero */
 
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
-  gap: 56px;
-  align-items: start;
-  padding: 84px 0 72px;
+  display: block;
+  padding: 19vh 0 21vh;
 }
 
 .hero h1 {
-  margin-top: 18px;
-  font-size: clamp(44px, 5.8vw, 84px);
+  max-width: 18ch;
+  font-size: clamp(56px, 8vw, 132px);
+  line-height: 0.88;
 }
 
 .hero .lead {
