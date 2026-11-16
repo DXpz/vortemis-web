@@ -244,6 +244,11 @@ h3 {
   text-transform: uppercase;
 }
 
+.hero h1 .line-light {
+  font-weight: 300;
+  color: var(--text);
+}
+
 .hero .lead {
   max-width: 44ch;
 }
