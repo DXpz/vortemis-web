@@ -143,12 +143,32 @@ h3 {
   height: 82px;
   border-bottom: 1px solid var(--rule);
   background: var(--bg);
+  transition: height 0.22s ease;
+}
+
+.site-nav.is-scrolled {
+  height: 56px;
 }
 
 .nav-side {
   display: flex;
   align-items: center;
   gap: 34px;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+
+.site-nav.is-scrolled .nav-side {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.site-nav .wordmark {
+  transition: font-size 0.22s ease;
+}
+
+.site-nav.is-scrolled .wordmark {
+  font-size: 18px;
 }
 
 .nav-side-right {
