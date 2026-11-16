@@ -1,5 +1,39 @@
 const canvas = document.getElementById("scene");
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const starDebug = new URLSearchParams(window.location.search).has("stars");
+
+function createTrailTexture(THREE) {
+  const textureCanvas = document.createElement("canvas");
+  textureCanvas.width = 256;
+  textureCanvas.height = 16;
+  const context = textureCanvas.getContext("2d");
+  const gradient = context.createLinearGradient(0, 0, 256, 0);
+  gradient.addColorStop(0, "rgba(196, 181, 253, 0)");
+  gradient.addColorStop(0.55, "rgba(196, 181, 253, 0.35)");
+  gradient.addColorStop(0.88, "rgba(233, 226, 255, 0.9)");
+  gradient.addColorStop(1, "rgba(255, 255, 255, 1)");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, 256, 16);
+  const texture = new THREE.CanvasTexture(textureCanvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+function createGlowTexture(THREE) {
+  const textureCanvas = document.createElement("canvas");
+  textureCanvas.width = 64;
+  textureCanvas.height = 64;
+  const context = textureCanvas.getContext("2d");
+  const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+  gradient.addColorStop(0.25, "rgba(233, 226, 255, 0.75)");
+  gradient.addColorStop(1, "rgba(196, 181, 253, 0)");
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, 64, 64);
+  const texture = new THREE.CanvasTexture(textureCanvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
 
 export async function startScene() {
   if (!canvas) return;
@@ -82,6 +116,111 @@ export async function startScene() {
   const field = new THREE.Points(geometry, material);
   scene.add(field);
 
+  const trailTexture = createTrailTexture(THREE);
+  const glowTexture = createGlowTexture(THREE);
+  const shooters = [];
+  if (starDebug) window.__streaks = shooters;
+
+  for (let streak = 0; streak < 2; streak += 1) {
+    const trailMaterial = new THREE.MeshBasicMaterial({
+      map: trailTexture,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), trailMaterial);
+    mesh.visible = false;
+    scene.add(mesh);
+
+    const glowMaterial = new THREE.SpriteMaterial({
+      map: glowTexture,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    });
+    const glow = new THREE.Sprite(glowMaterial);
+    glow.scale.set(2.4, 2.4, 1);
+    glow.visible = false;
+    scene.add(glow);
+
+    shooters.push({
+      mesh,
+      trailMaterial,
+      glow,
+      glowMaterial,
+      active: false,
+      progress: 0,
+      duration: 1.4,
+      start: new THREE.Vector3(),
+      delta: new THREE.Vector3(),
+      next: starDebug ? 0.2 + streak * 0.8 : 6 + streak * 12 + Math.random() * 4,
+    });
+  }
+
+  function spawnStreak(shooter) {
+    shooter.start.set(
+      -44 + Math.random() * 70,
+      17 + Math.random() * 7,
+      -10 + Math.random() * 20,
+    );
+    shooter.delta.set(
+      60 + Math.random() * 50,
+      -(11 + Math.random() * 9),
+      0,
+    );
+    shooter.duration = starDebug ? 6 : 1.2 + Math.random() * 0.8;
+    shooter.progress = 0;
+    shooter.active = true;
+    shooter.mesh.visible = true;
+    shooter.glow.visible = true;
+  }
+
+  function updateStreaks(elapsed, deltaSeconds) {
+    for (const shooter of shooters) {
+      if (!shooter.active) {
+        if (elapsed >= shooter.next) spawnStreak(shooter);
+        continue;
+      }
+
+      shooter.progress += deltaSeconds / shooter.duration;
+      if (shooter.progress >= 1) {
+        shooter.active = false;
+        shooter.mesh.visible = false;
+        shooter.glow.visible = false;
+        shooter.trailMaterial.opacity = 0;
+        shooter.glowMaterial.opacity = 0;
+        shooter.next = elapsed + 24 + Math.random() * 22;
+        continue;
+      }
+
+      const head = shooter.start
+        .clone()
+        .addScaledVector(shooter.delta, shooter.progress);
+      const tail = shooter.start
+        .clone()
+        .addScaledVector(shooter.delta, Math.max(shooter.progress - 0.22, 0));
+      const length = Math.max(head.distanceTo(tail), 0.8);
+
+      shooter.mesh.position.set(
+        (head.x + tail.x) / 2,
+        (head.y + tail.y) / 2,
+        (head.z + tail.z) / 2,
+      );
+      shooter.mesh.rotation.z = Math.atan2(
+        head.y - tail.y,
+        head.x - tail.x,
+      );
+      shooter.mesh.scale.set(length, 0.55, 1);
+
+      const fade = Math.sin(Math.PI * shooter.progress);
+      shooter.trailMaterial.opacity = fade * 0.75;
+      shooter.glow.position.copy(head);
+      shooter.glowMaterial.opacity = fade * 0.8;
+    }
+  }
+
   const pointer = { x: 0, y: 0 };
   window.addEventListener(
     "pointermove",
@@ -106,11 +245,14 @@ export async function startScene() {
   const clock = new THREE.Clock();
   let frameId = 0;
   let running = true;
+  let lastElapsed = 0;
 
   function frame() {
     if (!running) return;
 
     const elapsed = clock.getElapsedTime();
+    const deltaSeconds = Math.min(elapsed - lastElapsed, 0.1);
+    lastElapsed = elapsed;
     const attribute = geometry.getAttribute("position");
     const array = attribute.array;
 
@@ -124,6 +266,7 @@ export async function startScene() {
     attribute.needsUpdate = true;
 
     field.rotation.z = Math.sin(elapsed * 0.05) * 0.03;
+    updateStreaks(elapsed, deltaSeconds);
     camera.position.x += (pointer.x * 8 - camera.position.x) * 0.03;
     camera.position.y += (-38 - pointer.y * 6 - camera.position.y) * 0.03;
     camera.lookAt(0, 0, 0);

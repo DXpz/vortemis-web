@@ -83,6 +83,9 @@ All decorative art is ASCII, defined in `js/ascii.js` and injected into `pre`
 elements with a `data-ascii` attribute. The animated background and the timeline
 are rendered with Three.js.
 
+The background includes occasional shooting stars. To preview them during
+development, open the site with `?stars`:
+
 ## Contract
 
 The console consumes `/v1` from `Vortemis.io`. The canonical contract lives in
