@@ -121,7 +121,7 @@ export async function startScene() {
   const shooters = [];
   if (starDebug) window.__streaks = shooters;
 
-  for (let streak = 0; streak < 2; streak += 1) {
+  for (let streak = 0; streak < 1; streak += 1) {
     const trailMaterial = new THREE.MeshBasicMaterial({
       map: trailTexture,
       transparent: true,
@@ -155,7 +155,7 @@ export async function startScene() {
       duration: 1.4,
       start: new THREE.Vector3(),
       delta: new THREE.Vector3(),
-      next: starDebug ? 0.2 + streak * 0.8 : 6 + streak * 12 + Math.random() * 4,
+      next: starDebug ? 0.3 : 6 + Math.random() * 3,
     });
   }
 

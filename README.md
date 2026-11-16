@@ -83,8 +83,12 @@ All decorative art is ASCII, defined in `js/ascii.js` and injected into `pre`
 elements with a `data-ascii` attribute. The animated background and the timeline
 are rendered with Three.js.
 
-The background includes occasional shooting stars. To preview them during
-development, open the site with `?stars`:
+The background includes occasional shooting stars, one at a time. To preview
+them during development, open the site with `?stars`:
+
+```text
+http://127.0.0.1:8080/?stars
+```
 
 ## Contract
 
