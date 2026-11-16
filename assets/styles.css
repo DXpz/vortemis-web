@@ -236,9 +236,12 @@ h3 {
 
 .hero h1 {
   margin: 0 auto;
-  max-width: 18ch;
-  font-size: clamp(56px, 8vw, 132px);
-  line-height: 0.88;
+  max-width: 100%;
+  font-size: clamp(60px, 10.8vw, 180px);
+  font-weight: 500;
+  line-height: 0.84;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
 }
 
 .hero .lead {
