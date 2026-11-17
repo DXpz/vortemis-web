@@ -379,6 +379,11 @@ h3 {
   border-bottom: 0;
 }
 
+#what,
+#stack {
+  scroll-margin-top: 100px;
+}
+
 .overview {
   display: flex;
   align-items: center;
