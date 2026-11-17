@@ -159,7 +159,11 @@ for (const tab of $$(".nav-item")) {
   tab.addEventListener("click", () => showView(tab.dataset.view));
 }
 
-$("#api-label").textContent = API_BASE;
+const apiLabel = $("#api-label");
+
+if (apiLabel) {
+  apiLabel.textContent = API_BASE;
+}
 
 const siteNav = document.querySelector(".site-nav");
 const heroTitle = document.querySelector(".hero h1");

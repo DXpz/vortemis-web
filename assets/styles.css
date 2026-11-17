@@ -372,21 +372,21 @@ h3 {
 }
 
 .overview {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: 64px;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 72px;
 }
 
 .overview .statement {
-  max-width: 26ch;
+  max-width: 24ch;
   margin: 0;
 }
 
 .overview-figure {
+  flex: 0 1 440px;
   margin: 0;
-  justify-self: end;
-  width: min(100%, 340px);
+  width: min(100%, 440px);
 }
 
 .overview-figure img {
@@ -1355,8 +1355,8 @@ main {
   }
 
   .overview-figure {
-    justify-self: start;
-    width: min(100%, 280px);
+    justify-self: center;
+    width: min(100%, 320px);
   }
 
   .columns {
