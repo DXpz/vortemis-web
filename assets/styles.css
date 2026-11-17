@@ -421,10 +421,9 @@ h3 {
 .tech-primary {
   display: flex;
   align-items: flex-start;
+  justify-content: center;
   gap: 28px;
   margin-bottom: 52px;
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
 }
 
 .tech-primary .tech-figure {
