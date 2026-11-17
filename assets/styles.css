@@ -377,6 +377,11 @@ h3 {
 
 #stack {
   border-bottom: 0;
+  padding-top: 56px;
+}
+
+#stack .section-head {
+  margin-bottom: 68px;
 }
 
 #what,
