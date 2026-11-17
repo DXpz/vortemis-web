@@ -130,7 +130,7 @@ h3 {
 .page {
   max-width: 1320px;
   margin: 0 auto;
-  padding: 0 44px;
+  padding: 0 44px 36px;
 }
 
 .site-nav {
