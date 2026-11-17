@@ -383,6 +383,27 @@ h3 {
   margin: 0;
 }
 
+.overview .statement,
+.overview-figure {
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.overview.is-reveal-ready .statement {
+  opacity: 0;
+  transform: translateX(-64px);
+}
+
+.overview.is-reveal-ready .overview-figure {
+  opacity: 0;
+  transform: translateX(64px);
+}
+
+.overview.is-reveal-ready.is-visible .statement,
+.overview.is-reveal-ready.is-visible .overview-figure {
+  opacity: 1;
+  transform: none;
+}
+
 .overview-figure {
   flex: 0 1 440px;
   margin: 0;
@@ -1357,6 +1378,14 @@ main {
   .overview-figure {
     justify-self: center;
     width: min(100%, 320px);
+  }
+
+  .overview.is-reveal-ready .statement {
+    transform: translateX(-40px);
+  }
+
+  .overview.is-reveal-ready .overview-figure {
+    transform: translateX(40px);
   }
 
   .columns {

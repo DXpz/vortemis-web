@@ -201,6 +201,23 @@ window.addEventListener(
 );
 updateSiteNav();
 
+const overview = document.querySelector(".overview");
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+if (overview && !reducedMotion.matches) {
+  const reveal = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        overview.classList.toggle("is-visible", entry.isIntersecting);
+      }
+    },
+    { threshold: 0.2 },
+  );
+
+  overview.classList.add("is-reveal-ready");
+  reveal.observe(overview);
+}
+
 (async function boot() {
   if (!tokens.access && !tokens.refresh) {
     showScreen("home");
