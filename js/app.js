@@ -208,10 +208,13 @@ if (overview && !reducedMotion.matches) {
   const reveal = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        overview.classList.toggle("is-visible", entry.isIntersecting);
+        overview.classList.toggle(
+          "is-visible",
+          entry.intersectionRatio >= 0.4,
+        );
       }
     },
-    { threshold: 0.2 },
+    { threshold: [0, 0.2, 0.4, 0.6, 0.8, 1] },
   );
 
   overview.classList.add("is-reveal-ready");
