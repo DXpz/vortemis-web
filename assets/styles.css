@@ -431,9 +431,10 @@ h3 {
   margin: 0;
 }
 
-.tech-primary .tech-figure svg {
-  width: 64px;
-  height: 64px;
+.tech-primary .tech-figure img {
+  display: block;
+  width: 240px;
+  height: auto;
 }
 
 .tech-primary h3 {
