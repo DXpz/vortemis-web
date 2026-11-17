@@ -19,9 +19,9 @@ for (const node of $$("[data-ascii]")) {
   node.textContent = ASCII[node.dataset.ascii] ?? "";
 }
 
-const ticker = document.querySelector(".ticker");
+const tickers = $$(".ticker");
 
-if (ticker) {
+for (const ticker of tickers) {
   ticker.textContent = ASCII.rule.repeat(40);
 }
 

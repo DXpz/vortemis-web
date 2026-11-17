@@ -371,6 +371,10 @@ h3 {
   border-bottom: 1px solid var(--rule);
 }
 
+#what {
+  border-bottom: 0;
+}
+
 .overview {
   display: flex;
   align-items: center;
