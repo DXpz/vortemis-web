@@ -462,9 +462,25 @@ h3 {
 }
 
 .tech {
+  position: relative;
   grid-column: span 2;
-  padding-top: 18px;
-  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+}
+
+.tech::before {
+  content: "~~~.~~~*~~~+~~~.~~~*~~~[~~+~~]~~~.~~~*~~~+~~~.~~~*~~~+~~~.~~~*~~~[~~+~~]~~~.~~~*~~~+~~~.~~~*~~~+~~~.~~~*~~~[~~+~~]~~~.~~~*~~~+";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  overflow: hidden;
+  color: rgba(196, 181, 253, 0.4);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
 }
 
 .tech:nth-child(1),
