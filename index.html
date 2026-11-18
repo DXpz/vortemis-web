@@ -176,6 +176,194 @@
     </section>
 
     <div class="ticker mono" aria-hidden="true"></div>
+
+    <section class="section" id="detections">
+      <div class="section-head center">
+        <h2>Detections.</h2>
+      </div>
+
+      <div class="tactic-head">
+        <span>Tactic</span>
+        <span>ID</span>
+        <span>Signal</span>
+      </div>
+
+      <div class="ticker mono" aria-hidden="true"></div>
+
+      <div class="tactic-body">
+        <div class="tactic-row">
+          <span class="tactic-name">Exfiltration</span>
+          <span class="tactic-id">TA0010</span>
+          <span class="tactic-signal">Completed connection, outbound ratio above 0.60 and forward volume above 25 KB.</span>
+        </div>
+        <div class="tactic-row">
+          <span class="tactic-name">Lateral Movement</span>
+          <span class="tactic-id">TA0008</span>
+          <span class="tactic-signal">Private source and destination on SSH, RDP, SMB, WinRM or RPC.</span>
+        </div>
+        <div class="tactic-row">
+          <span class="tactic-name">Impact</span>
+          <span class="tactic-id">TA0040</span>
+          <span class="tactic-signal">Inter-arrival under 2 ms with a failed or abnormal connection state.</span>
+        </div>
+        <div class="tactic-row">
+          <span class="tactic-name">Reconnaissance</span>
+          <span class="tactic-id">TA0043</span>
+          <span class="tactic-signal">Connection attempt or rejection, no response bytes and short duration.</span>
+        </div>
+        <div class="tactic-row">
+          <span class="tactic-name">Command and Control</span>
+          <span class="tactic-id">TA0011</span>
+          <span class="tactic-signal">Low-volume short-interval traffic or common C2 ports.</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker mono" aria-hidden="true"></div>
+
+    <section class="section" id="console">
+      <div class="section-head center">
+        <h2>Console.</h2>
+      </div>
+
+      <figure class="console-shot">
+        <div class="console-placeholder mono">[ SCREENSHOT ] CONSOLE / OVERVIEW · 1600 × 1000</div>
+        <img src="assets/console-overview.png" alt="Vortemis console overview" onerror="this.remove()">
+      </figure>
+
+      <div class="console-notes">
+        <article class="note">
+          <span class="note-tag">01 OVERVIEW</span>
+          <h3>Flows, anomalies, tactics</h3>
+          <p>Totals, anomaly rate, tactic distribution, top sources and a five-minute timeline.</p>
+        </article>
+        <article class="note">
+          <span class="note-tag">02 FLOWS</span>
+          <h3>Forensic table</h3>
+          <p>Filter by tactic, protocol, source and probability with cursor pagination.</p>
+        </article>
+        <article class="note">
+          <span class="note-tag">03 ADMIN</span>
+          <h3>Operator actions</h3>
+          <p>Telemetry purge and password rotation, restricted to the admin role.</p>
+        </article>
+      </div>
+    </section>
+
+    <div class="ticker mono" aria-hidden="true"></div>
+
+    <section class="section" id="api">
+      <div class="section-head center">
+        <h2>Interfaces.</h2>
+      </div>
+
+      <div class="api-grid">
+        <div>
+          <ul class="endpoints">
+            <li><span class="method">GET</span><span>/v1/health</span></li>
+            <li><span class="method">POST</span><span>/v1/auth/login</span></li>
+            <li><span class="method">POST</span><span>/v1/auth/refresh</span></li>
+            <li><span class="method">GET</span><span>/v1/flows</span></li>
+            <li><span class="method">GET</span><span>/v1/stats/summary</span></li>
+            <li><span class="method">GET</span><span>/v1/stats/top-sources</span></li>
+            <li><span class="method">GET</span><span>/v1/stats/timeline</span></li>
+            <li><span class="method">GET</span><span>/v1/engine/metadata</span></li>
+          </ul>
+        </div>
+
+        <div class="api-note">
+          <h3>Access</h3>
+          <p>Operators authenticate against the engine. The API returns a bearer access token for fifteen minutes and a refresh token for thirty days; rotation revokes the previous pair.</p>
+          <p>The OpenAPI document ships as an asset with every release, so a frontend can pin a version and generate its client from it.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker mono" aria-hidden="true"></div>
+
+    <section class="section" id="run">
+      <div class="section-head center">
+        <h2>Run it.</h2>
+      </div>
+
+      <div class="run">
+        <pre class="code">git clone https://github.com/Geovanny001/Vortemis.io.git
+cd Vortemis.io
+docker compose up --build
+
+# console  http://localhost:8501
+# api      http://localhost:8000
+# docs     http://localhost:8000/docs</pre>
+
+        <ul class="requirements">
+          <li><span>Runtime</span><b>Python 3.14 or Docker</b></li>
+          <li><span>Storage</span><b>PostgreSQL 16</b></li>
+          <li><span>Telemetry</span><b>Zeek conn.log</b></li>
+          <li><span>Model</span><b>Shipped checkpoint</b></li>
+          <li><span>Schema</span><b>Alembic migrations</b></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="ticker mono" aria-hidden="true"></div>
+
+    <section class="section" id="faq">
+      <div class="section-head center">
+        <h2>FAQ.</h2>
+      </div>
+
+      <div class="faq">
+        <details>
+          <summary>Does it inspect payloads?</summary>
+          <p>No. It reads connection metadata only, never packet bodies.</p>
+        </details>
+        <details>
+          <summary>Where does detection run?</summary>
+          <p>Beside your data. The engine reads logs or a capture and writes results to PostgreSQL; it never sits inline.</p>
+        </details>
+        <details>
+          <summary>Is the model calibrated for real traffic?</summary>
+          <p>It ships with a baseline checkpoint and a configurable threshold. Scores are probabilities around the 95th percentile.</p>
+        </details>
+        <details>
+          <summary>Can a frontend use it?</summary>
+          <p>Yes. Everything goes through a versioned /v1 contract with an OpenAPI document published per release.</p>
+        </details>
+        <details>
+          <summary>What happens if the log is truncated or rotated?</summary>
+          <p>The ingestion checkpoint detects it and restarts from the beginning. Deterministic flow ids prevent duplicates.</p>
+        </details>
+      </div>
+    </section>
+
+    <div class="ticker mono" aria-hidden="true"></div>
+
+    <section class="closing" id="access">
+      <h2>Watch the network<br>without touching it.</h2>
+      <button class="login-cta" data-goto="login">OPEN CONSOLE</button>
+    </section>
+
+    <div class="ticker mono" aria-hidden="true"></div>
+
+    <footer class="site-footer">
+      <div>
+        <span>Engine</span>
+        <a href="https://github.com/Geovanny001/Vortemis.io" target="_blank" rel="noreferrer">Source</a>
+        <a href="https://github.com/Geovanny001/Vortemis.io/blob/develop/docs/CONTRACTS.md" target="_blank" rel="noreferrer">Contract</a>
+        <a href="https://github.com/Geovanny001/Vortemis.io/releases" target="_blank" rel="noreferrer">Releases</a>
+      </div>
+      <div>
+        <span>Runtime</span>
+        <span>Python 3.14</span>
+        <span>PostgreSQL 16</span>
+        <span>FastAPI</span>
+      </div>
+      <div>
+        <span>State</span>
+        <span>Active development</span>
+        <span id="api-label"></span>
+      </div>
+    </footer>
   </div>
 
   <section id="login" class="login" hidden>

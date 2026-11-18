@@ -164,6 +164,7 @@ h3 {
 }
 
 .site-nav .wordmark {
+  grid-column: 2;
   transition: font-size 0.22s ease;
 }
 
@@ -389,9 +390,22 @@ h3 {
   border-bottom: 0;
 }
 
+#detections,
+#console,
+#api,
+#run,
+#faq {
+  border-bottom: 0;
+}
+
 #what,
 #stack,
-#how {
+#how,
+#detections,
+#console,
+#api,
+#run,
+#faq {
   scroll-margin-top: 100px;
 }
 
@@ -475,7 +489,9 @@ h3 {
 }
 
 .tech::before,
-.step::before {
+.step::before,
+.note::before,
+.faq details::before {
   content: var(--ascii-rule);
   position: absolute;
   top: 0;
@@ -734,6 +750,173 @@ h3 {
   color: var(--muted);
 }
 
+/* Detections */
+
+.tactic-head,
+.tactic-row {
+  display: grid;
+  grid-template-columns: 220px 100px minmax(0, 1fr);
+  gap: 28px;
+  align-items: baseline;
+}
+
+.tactic-head {
+  padding-bottom: 12px;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+#detections .ticker {
+  margin-bottom: 6px;
+}
+
+.tactic-row {
+  padding: 16px 0;
+}
+
+.tactic-name {
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1.05;
+}
+
+.tactic-id {
+  color: var(--accent-soft);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
+.tactic-signal {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* Console */
+
+.console-shot {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 400px;
+  margin: 0;
+  background: rgba(139, 92, 246, 0.03);
+}
+
+.console-shot img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.console-placeholder {
+  color: var(--faint);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+}
+
+.console-notes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px 28px;
+  margin-top: 44px;
+}
+
+.note {
+  position: relative;
+  padding-top: 20px;
+}
+
+.note-tag {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--accent-soft);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+
+.note h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.note p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* Interfaces */
+
+.api-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+#api .endpoints {
+  gap: 12px;
+  font-size: 12px;
+}
+
+#api .endpoints li {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.api-note h3 {
+  margin: 0 0 12px;
+  font-size: 28px;
+}
+
+.api-note p {
+  max-width: 46ch;
+  margin: 0 0 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* Run */
+
+#run .code {
+  border: 0;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+#run .requirements li {
+  padding: 8px 0;
+  border-bottom: 0;
+}
+
+/* Closing */
+
+.closing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 120px 0;
+  text-align: center;
+}
+
+.closing h2 {
+  max-width: 18ch;
+  margin: 0;
+  font-size: clamp(40px, 5.4vw, 76px);
+  line-height: 0.95;
+}
+
 .columns {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -767,11 +950,13 @@ h3 {
 /* FAQ */
 
 .faq {
-  border-top: 1px dotted var(--rule-strong);
+  border-top: 0;
 }
 
 .faq details {
-  border-bottom: 1px dotted var(--rule-strong);
+  position: relative;
+  padding-top: 18px;
+  border-bottom: 0;
 }
 
 .faq summary {
@@ -1676,6 +1861,33 @@ main {
     display: none;
   }
 
+  .tactic-head {
+    display: none;
+  }
+
+  .tactic-row {
+    grid-template-columns: 1fr auto;
+    gap: 6px 20px;
+  }
+
+  .tactic-signal {
+    grid-column: 1 / -1;
+  }
+
+  .console-notes {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .api-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .run {
+    grid-template-columns: 1fr;
+  }
+
   .tech,
   .tech:nth-child(1),
   .tech:nth-child(2) {
@@ -1753,6 +1965,31 @@ main {
 
   .steps {
     grid-template-columns: 1fr;
+  }
+
+  .tactic-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .tactic-signal {
+    grid-column: auto;
+  }
+
+  .console-shot {
+    min-height: 240px;
+  }
+
+  .closing {
+    padding: 80px 0;
+  }
+
+  .site-nav > .nav-side:not(.nav-side-right) {
+    display: none;
+  }
+
+  .site-nav .nav-side-right {
+    gap: 16px;
   }
 
   .tech-primary {
