@@ -445,6 +445,7 @@ h3 {
   display: block;
   width: 240px;
   height: auto;
+  max-height: none;
 }
 
 .tech-primary h3 {
@@ -506,6 +507,17 @@ h3 {
   color: var(--accent-soft);
 }
 
+.tech .tech-figure {
+  display: flex;
+  align-items: center;
+  height: 150px;
+}
+
+.tech:nth-child(1) .tech-figure,
+.tech:nth-child(2) .tech-figure {
+  justify-content: center;
+}
+
 .tech-figure svg {
   display: block;
   width: 44px;
@@ -515,7 +527,9 @@ h3 {
 .tech-figure img {
   display: block;
   width: auto;
-  height: 200px;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .tech h3 {
