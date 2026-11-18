@@ -593,23 +593,61 @@ h3 {
   font-size: 11px;
 }
 
-.pipeline-art {
+.flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
   margin: 0;
-  padding: 10px 0;
-  overflow-x: auto;
-  color: rgba(196, 181, 253, 0.6);
+  color: var(--accent-soft);
+}
+
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.flow-dot {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 50%;
   font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.4;
-  text-align: center;
-  white-space: pre;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.flow-line {
+  position: relative;
+  flex: 1 1 auto;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--rule-strong) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+.flow-line::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid var(--rule-strong);
+  border-right: 1px solid var(--rule-strong);
+  transform: translateY(-50%) rotate(45deg);
 }
 
 .steps {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 44px 28px;
-  margin-top: 52px;
+  margin-top: 44px;
 }
 
 .step {
@@ -1577,6 +1615,10 @@ main {
     gap: 36px 28px;
   }
 
+  .flow {
+    display: none;
+  }
+
   .tech,
   .tech:nth-child(1),
   .tech:nth-child(2) {
@@ -1654,10 +1696,6 @@ main {
 
   .steps {
     grid-template-columns: 1fr;
-  }
-
-  .pipeline-art {
-    font-size: 9.5px;
   }
 
   .tech-primary {
