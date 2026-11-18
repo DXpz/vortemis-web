@@ -26,6 +26,7 @@
       <div class="nav-side">
         <a href="#what">ENGINE</a>
         <a href="#stack">STACK</a>
+        <a href="#how">HOW</a>
       </div>
 
       <a class="wordmark" href="#" data-goto="home">VORTEMIS</a>
@@ -118,6 +119,42 @@
           </figure>
           <h3>FastAPI</h3>
           <p>Serves the versioned /v1 contract, the OpenAPI document and the authenticated operator endpoints.</p>
+        </article>
+      </div>
+    </section>
+
+    <div class="ticker mono" aria-hidden="true"></div>
+
+    <section class="section" id="how">
+      <div class="section-head center">
+        <h2>How it works.</h2>
+      </div>
+
+      <pre class="pipeline-art" data-ascii="pipeline"></pre>
+
+      <div class="steps">
+        <article class="step">
+          <span class="step-num">01</span>
+          <h3>Ingest</h3>
+          <p>Reads Zeek conn.log or a live capture, persists byte offsets and deduplicates by flow id.</p>
+        </article>
+
+        <article class="step">
+          <span class="step-num">02</span>
+          <h3>Score</h3>
+          <p>Builds six features per flow and turns the autoencoder reconstruction error into a probability.</p>
+        </article>
+
+        <article class="step">
+          <span class="step-num">03</span>
+          <h3>Map</h3>
+          <p>Explicit rules assign a MITRE tactic only when the score crosses the configured threshold.</p>
+        </article>
+
+        <article class="step">
+          <span class="step-num">04</span>
+          <h3>Serve</h3>
+          <p>Stores results in PostgreSQL behind a versioned /v1 with filters, pagination and aggregates.</p>
         </article>
       </div>
     </section>
