@@ -221,6 +221,21 @@ if (overview && !reducedMotion.matches) {
   reveal.observe(overview);
 }
 
+const flow = document.querySelector(".flow");
+
+if (flow && !reducedMotion.matches) {
+  const activate = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        flow.classList.toggle("is-active", entry.isIntersecting);
+      }
+    },
+    { threshold: 0.6 },
+  );
+
+  activate.observe(flow);
+}
+
 (async function boot() {
   if (!tokens.access && !tokens.refresh) {
     showScreen("home");
