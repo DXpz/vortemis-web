@@ -470,6 +470,19 @@ h3 {
 .tech:nth-child(1),
 .tech:nth-child(2) {
   grid-column: span 3;
+  text-align: center;
+}
+
+.tech:nth-child(1) .tech-figure,
+.tech:nth-child(2) .tech-figure {
+  display: flex;
+  justify-content: center;
+}
+
+.tech:nth-child(1) p,
+.tech:nth-child(2) p {
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .tech-figure {
