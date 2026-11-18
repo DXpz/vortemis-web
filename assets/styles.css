@@ -424,7 +424,7 @@ h3 {
 
 .tech-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 44px 36px;
 }
 
@@ -462,8 +462,14 @@ h3 {
 }
 
 .tech {
+  grid-column: span 2;
   padding-top: 18px;
   border-top: 1px solid var(--rule);
+}
+
+.tech:nth-child(1),
+.tech:nth-child(2) {
+  grid-column: span 3;
 }
 
 .tech-figure {
@@ -475,6 +481,12 @@ h3 {
   display: block;
   width: 44px;
   height: 44px;
+}
+
+.tech-figure img {
+  display: block;
+  width: auto;
+  height: 200px;
 }
 
 .tech h3 {
@@ -1470,6 +1482,12 @@ main {
   .tech-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 36px 28px;
+  }
+
+  .tech,
+  .tech:nth-child(1),
+  .tech:nth-child(2) {
+    grid-column: auto;
   }
 
   .overview.is-reveal-ready .statement {
