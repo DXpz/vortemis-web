@@ -39,6 +39,16 @@ To drive a demonstration, run the engine's `scripts/demo_simulator.py`, which
 appends scripted benign traffic plus the five MITRE tactics to the ingestion log
 with current timestamps.
 
+The public landing reads `assets/detections.json`. Generate it while the engine
+runs:
+
+```bash
+VORTEMIS_API=http://127.0.0.1:8000 python3 scripts/snapshot_detections.py
+```
+
+The file is generated and git-ignored; the script polls the API every three
+seconds.
+
 ## Allow the origin in the API
 
 The API enforces an explicit CORS allowlist:
