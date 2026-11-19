@@ -223,7 +223,7 @@ function renderTable(records) {
   if (!records.length) {
     const row = element("tr");
     const cell = element("td", "empty", "No detections above 0.70 yet.");
-    cell.colSpan = 6;
+    cell.colSpan = 4;
     row.append(cell);
     body.append(row);
     return;
@@ -233,16 +233,17 @@ function renderTable(records) {
     const row = element("tr", "is-clickable");
     row.append(element("td", "mono", formatClock(record.ts)));
     row.append(
-      element("td", "mono", `${record.src_ip}:${record.src_port}`),
+      element(
+        "td",
+        "mono flow",
+        `${record.src_ip}:${record.src_port} → ` +
+          `${record.dst_ip}:${record.dst_port}`,
+      ),
     );
-    row.append(
-      element("td", "mono", `${record.dst_ip}:${record.dst_port}`),
-    );
-    row.append(element("td", null, record.protocol.toUpperCase()));
     row.append(
       element(
         "td",
-        `probability ${probabilityClass(record.anomaly_probability)}`,
+        `num probability ${probabilityClass(record.anomaly_probability)}`,
         record.anomaly_probability.toFixed(3),
       ),
     );
@@ -260,7 +261,7 @@ function renderStream(records) {
   if (!records.length) {
     const row = element("tr");
     const cell = element("td", "empty", "Waiting for flows…");
-    cell.colSpan = 5;
+    cell.colSpan = 4;
     row.append(cell);
     body.append(row);
     return;
@@ -270,10 +271,12 @@ function renderStream(records) {
     const row = element("tr");
     row.append(element("td", "mono", formatClock(record.ts)));
     row.append(
-      element("td", "mono", `${record.src_ip}:${record.src_port}`),
-    );
-    row.append(
-      element("td", "mono", `${record.dst_ip}:${record.dst_port}`),
+      element(
+        "td",
+        "mono flow",
+        `${record.src_ip}:${record.src_port} → ` +
+          `${record.dst_ip}:${record.dst_port}`,
+      ),
     );
     row.append(
       element(

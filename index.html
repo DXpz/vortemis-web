@@ -193,7 +193,7 @@
 
         <p class="mono muted live-pipeline" id="live-pipeline"></p>
 
-        <div class="live-grid">
+        <div class="live-grid three">
           <section class="panel">
             <div class="panel-head">
               <h2>By tactic</h2>
@@ -215,6 +215,14 @@
             </div>
             <div class="live-chart" id="live-chart"></div>
           </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Top destinations</h2>
+              <span class="mono muted">RECENT SAMPLE</span>
+            </div>
+            <ol class="rank" id="live-destinations"></ol>
+          </section>
         </div>
 
         <div class="live-grid">
@@ -224,12 +232,11 @@
               <span class="mono muted">ALL RECENT FLOWS</span>
             </div>
             <div class="table-wrap">
-              <table class="data flows stream">
+              <table class="data streams">
                 <thead>
                   <tr>
                     <th>Time</th>
-                    <th>Source</th>
-                    <th>Destination</th>
+                    <th>Flow</th>
                     <th class="num">P</th>
                     <th>Tactic</th>
                   </tr>
@@ -241,35 +248,26 @@
 
           <section class="panel">
             <div class="panel-head">
-              <h2>Top destinations</h2>
-              <span class="mono muted">RECENT SAMPLE</span>
+              <h2>Recent detections</h2>
+              <span class="mono muted" id="live-count">—</span>
             </div>
-            <ol class="rank" id="live-destinations"></ol>
+            <div class="table-wrap">
+              <table class="data streams">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Flow</th>
+                    <th class="num">P</th>
+                    <th>Tactic</th>
+                  </tr>
+                </thead>
+                <tbody id="landing-detections"></tbody>
+              </table>
+            </div>
           </section>
         </div>
 
-        <section class="panel live-recent">
-          <div class="panel-head">
-            <h2>Recent detections</h2>
-            <span class="mono muted" id="live-count">—</span>
-          </div>
-          <div class="table-wrap">
-            <table class="data flows">
-              <thead>
-                <tr>
-                  <th>Time</th>
-                  <th>Source</th>
-                  <th>Destination</th>
-                  <th>Proto</th>
-                  <th class="num">P(anomaly)</th>
-                  <th>Tactic</th>
-                </tr>
-              </thead>
-              <tbody id="landing-detections"></tbody>
-            </table>
-          </div>
-          <div id="detection-detail" class="detection-detail" hidden></div>
-        </section>
+        <div id="detection-detail" class="detection-detail" hidden></div>
       </div>
     </section>
 
