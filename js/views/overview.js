@@ -18,7 +18,7 @@ export async function refreshOverview() {
   const [summary, sources, timeline, view] = await Promise.all([
     api.summary({ threshold: THRESHOLD }),
     api.sources({ threshold: THRESHOLD, limit: 8 }),
-    api.timeline({ threshold: THRESHOLD, bucket_seconds: 300 }),
+    api.timeline({ threshold: THRESHOLD, bucket_seconds: 30 }),
     ensureChart(),
   ]);
 

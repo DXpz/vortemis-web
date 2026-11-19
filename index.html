@@ -90,6 +90,19 @@
           </p>
         </article>
       </div>
+
+      <div class="engine-stack">
+        <span class="mono engine-stack-label">STACK</span>
+        <div class="engine-stack-logos">
+          <img src="assets/vortemis1.svg" alt="Vortemis">
+          <img src="assets/zeek.png" alt="Zeek">
+          <img src="assets/torch.png" alt="PyTorch">
+          <img src="assets/postgres.png" alt="PostgreSQL">
+          <img src="assets/python.png" alt="Python">
+          <img src="assets/fastapi.png" alt="FastAPI">
+          <img src="assets/mitre.png" alt="MITRE ATT&CK">
+        </div>
+      </div>
     </section>
 
     <section class="section" id="how">
@@ -184,6 +197,91 @@
         Rules are evaluated only for flows above <code>epsilon</code>. They are
         deliberately simple, documented in the repository and testable.
       </p>
+
+      <div class="live-block">
+        <div class="panel-head">
+          <h2>Live detections</h2>
+          <span class="mono muted" id="live-stamp">WAITING FOR TELEMETRY</span>
+        </div>
+
+        <p class="mono muted live-pipeline" id="live-pipeline"></p>
+
+        <div class="live-grid three">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>By tactic</h2>
+              <span class="mono muted">THRESHOLD 0.70</span>
+            </div>
+            <ol class="rank" id="live-tactics"></ol>
+            <div class="live-kpis">
+              <div><span>FLOWS</span><strong id="live-flows">…</strong></div>
+              <div><span>ANOMALIES</span><strong id="live-anomalies">…</strong></div>
+              <div><span>ANOMALY RATE</span><strong id="live-rate">…</strong></div>
+              <div><span>FLOWS / S</span><strong id="live-throughput">…</strong></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Anomalies over time</h2>
+              <span class="mono muted">30S BUCKETS</span>
+            </div>
+            <div class="live-chart" id="live-chart"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Top destinations</h2>
+              <span class="mono muted">RECENT SAMPLE</span>
+            </div>
+            <ol class="rank" id="live-destinations"></ol>
+          </section>
+        </div>
+
+        <div class="live-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Live stream</h2>
+              <span class="mono muted">ALL RECENT FLOWS</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data streams">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Flow</th>
+                    <th class="num">P</th>
+                    <th>Tactic</th>
+                  </tr>
+                </thead>
+                <tbody id="live-stream"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Recent detections</h2>
+              <span class="mono muted" id="live-count">—</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data streams">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Flow</th>
+                    <th class="num">P</th>
+                    <th>Tactic</th>
+                  </tr>
+                </thead>
+                <tbody id="landing-detections"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div id="detection-detail" class="detection-detail" hidden></div>
+      </div>
     </section>
 
     <section class="section" id="console">
@@ -399,6 +497,10 @@ docker compose up --build
       <div class="masthead-top">
         <div class="wordmark">VORTEMIS<span>.IO</span></div>
         <div class="masthead-meta">
+          <span id="live-badge" class="live-badge" hidden>
+            <span class="live-dot"></span>
+            <span id="live-label">LIVE</span>
+          </span>
           <span id="engine-badge" class="mono">engine …</span>
           <span id="user-label" class="mono"></span>
           <button class="link" id="logout">SIGN OUT</button>
@@ -407,8 +509,9 @@ docker compose up --build
 
       <nav class="nav" aria-label="Sections">
         <button class="nav-item is-active" data-view="overview">01 — OVERVIEW</button>
-        <button class="nav-item" data-view="flows">02 — FLOWS</button>
-        <button class="nav-item" id="tab-admin" data-view="admin" hidden>03 — ADMIN</button>
+        <button class="nav-item" data-view="live">02 — LIVE</button>
+        <button class="nav-item" data-view="flows">03 — FLOWS</button>
+        <button class="nav-item" id="tab-admin" data-view="admin" hidden>04 — ADMIN</button>
       </nav>
     </header>
 
@@ -453,13 +556,37 @@ docker compose up --build
         <section class="panel wide">
           <div class="panel-head">
             <h2>Timeline</h2>
-            <span class="mono muted">FIVE-MINUTE BUCKETS · ANOMALIES ABOVE 0.70</span>
+            <span class="mono muted">THIRTY-SECOND BUCKETS · ANOMALIES ABOVE 0.70</span>
           </div>
           <div class="chart-host" id="timeline-host"></div>
           <div class="chart-axis mono" id="timeline-axis">
             <span id="axis-start"></span>
             <span id="axis-peak"></span>
             <span id="axis-end"></span>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-live" hidden>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Detection feed</h2>
+            <span class="mono muted" id="live-status">AUTO-REFRESH · 3S · THRESHOLD 0.70</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data flows">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Source</th>
+                  <th>Destination</th>
+                  <th>Proto</th>
+                  <th class="num">P(anomaly)</th>
+                  <th>Tactic</th>
+                </tr>
+              </thead>
+              <tbody id="live-body"></tbody>
+            </table>
           </div>
         </section>
       </section>
@@ -574,6 +701,7 @@ docker compose up --build
 
   <div class="toasts" id="toasts" aria-live="polite"></div>
 
+  <script type="module" src="js/landing-detections.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

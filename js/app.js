@@ -6,6 +6,7 @@ import { startScene } from "./scene.js";
 import { refreshOverview } from "./views/overview.js";
 import { mountFlows, refreshFlows } from "./views/flows.js";
 import { mountAdmin } from "./views/admin.js";
+import { mountLive, refreshLive, refreshLiveBadge } from "./views/live.js";
 
 const state = {
   identity: null,
@@ -14,6 +15,8 @@ const state = {
 };
 
 const SCREENS = ["home", "login", "app"];
+const POLL_MS = 3000;
+let pollTimer = null;
 
 for (const node of $$("[data-ascii]")) {
   node.textContent = ASCII[node.dataset.ascii] ?? "";
@@ -26,7 +29,29 @@ function showScreen(name) {
     const node = document.getElementById(screen);
     if (node) node.hidden = screen !== name;
   }
+  if (name !== "app") stopPolling();
   window.scrollTo(0, 0);
+}
+
+function startPolling() {
+  stopPolling();
+  pollTimer = window.setInterval(async () => {
+    if (!state.identity) return;
+    try {
+      if (state.view === "overview") await refreshOverview();
+      if (state.view === "live") await refreshLive();
+      await refreshLiveBadge();
+    } catch (error) {
+      if (error?.status === 401) handleError(error);
+    }
+  }, POLL_MS);
+}
+
+function stopPolling() {
+  if (pollTimer) {
+    window.clearInterval(pollTimer);
+    pollTimer = null;
+  }
 }
 
 function handleError(error) {
@@ -58,6 +83,8 @@ async function enterApp() {
     });
 
   await showView("overview");
+  await refreshLiveBadge();
+  startPolling();
 }
 
 async function showView(view) {
@@ -84,6 +111,14 @@ async function showView(view) {
         state.mounted.add("flows");
       }
       await refreshFlows();
+    }
+
+    if (view === "live") {
+      if (!state.mounted.has("live")) {
+        mountLive();
+        state.mounted.add("live");
+      }
+      await refreshLive();
     }
 
     if (view === "admin" && !state.mounted.has("admin")) {

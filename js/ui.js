@@ -34,6 +34,17 @@ export function formatClock(iso) {
   });
 }
 
+export function formatAgo(iso) {
+  const seconds = Math.max(
+    0,
+    Math.round((Date.now() - new Date(iso).getTime()) / 1000),
+  );
+  if (seconds < 1) return "now";
+  if (seconds < 60) return `${seconds}s ago`;
+  if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+  return `${Math.floor(seconds / 3600)}h ago`;
+}
+
 export function formatShort(iso) {
   return new Date(iso).toLocaleString([], {
     month: "short",
