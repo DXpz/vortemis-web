@@ -1504,6 +1504,30 @@ main {
   margin-top: 26px;
 }
 
+.live-pipeline {
+  margin: 6px 0 0;
+  color: var(--faint);
+}
+
+.data tr.is-clickable {
+  cursor: pointer;
+}
+
+.data tr.is-clickable:hover td {
+  color: var(--text);
+  background: rgba(196, 181, 253, 0.05);
+}
+
+.detection-detail {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+
+.detection-detail .data {
+  margin-top: 12px;
+}
+
 @media (max-width: 900px) {
   .live-grid {
     grid-template-columns: 1fr;
