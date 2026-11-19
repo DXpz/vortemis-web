@@ -1545,3 +1545,36 @@ main {
     gap: 34px;
   }
 }
+
+.engine-stack {
+  align-items: center;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  margin-top: 46px;
+  padding-top: 22px;
+}
+
+.engine-stack-label {
+  color: var(--faint);
+  letter-spacing: 0.2em;
+}
+
+.engine-stack-logos {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 26px;
+}
+
+.engine-stack-logos img {
+  height: 24px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+  width: auto;
+}
+
+.engine-stack-logos img:hover {
+  opacity: 1;
+}
