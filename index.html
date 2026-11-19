@@ -22,440 +22,165 @@
   <canvas id="scene" aria-hidden="true"></canvas>
 
   <div id="home" class="page">
-    <header class="site-nav">
-      <div class="nav-side">
-        <a href="#what">ENGINE</a>
-        <a href="#how">PIPELINE</a>
-        <a href="#detects">DETECTIONS</a>
-      </div>
-
-      <a class="wordmark" href="#" data-goto="home">VORTEMIS</a>
-
-      <div class="nav-side nav-side-right">
-        <a href="#faq">FAQ</a>
-        <a href="https://github.com/Geovanny001/Vortemis.io/blob/develop/docs/CONTRACTS.md" target="_blank" rel="noreferrer">CONTRACT</a>
-        <button class="login-icon" data-goto="login" aria-label="Sign in" title="Sign in">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>
-            <path d="M3 12h11"/>
-            <path d="M10 8l4 4-4 4"/>
-          </svg>
-        </button>
-      </div>
-
-      <div class="nav-rule" aria-hidden="true"></div>
+    <header class="lp-header">
+      <button class="lp-wordmark" data-goto="login" title="Operator access">VORTEMIS</button>
     </header>
 
-    <section class="hero">
-      <h1><span class="line-light">Watch the network</span><br>without touching it.</h1>
-    </section>
-
-    <div class="ticker mono">
-      ZEEK · TSHARK · PYTORCH · POSTGRESQL · MITRE ATT&amp;CK · FASTAPI
-    </div>
-
-    <section class="section" id="what">
-      <div class="engine-intro">
-        <img class="engine-mark" src="assets/vortemis1.svg" alt="Vortemis">
-        <p class="statement">
-          Vortemis is a passive SOC telemetry engine. It runs beside your data,
-          never in the traffic path, and turns ordinary connection records into
-          scored, mapped and queryable detections.
-        </p>
-      </div>
-
-      <div class="columns">
-        <article>
-          <span class="num">WHAT IT DOES</span>
-          <h3>Read, score, map, store</h3>
-          <p>
-            Ingests Zeek <code>conn.log</code> or a live tshark capture, builds
-            a six-feature vector per flow, scores it with an autoencoder, maps
-            anomalies to five MITRE tactics and writes the result to PostgreSQL.
-          </p>
-        </article>
-        <article>
-          <span class="num">WHAT IT DOES NOT</span>
-          <h3>No payloads, no agents</h3>
-          <p>
-            No packet bodies, no host agents, no inline blocking and no packet
-            storage. Only Layer 3 and 4 metadata leaves the sensor, and the
-            engine only reads what the flow record already contains.
-          </p>
-        </article>
-        <article>
-          <span class="num">WHO IT IS FOR</span>
-          <h3>Teams that already run Zeek</h3>
-          <p>
-            SOC analysts triaging suspicious flows, network engineers with
-            existing sensor output, and detection engineers who want a
-            versioned contract instead of a black box.
-          </p>
-        </article>
-      </div>
-
-      <div class="engine-stack">
-        <span class="mono engine-stack-label">STACK</span>
-        <div class="engine-stack-grid">
-          <img src="assets/zeek.png" alt="Zeek">
-          <img src="assets/torch.png" alt="PyTorch">
-          <img src="assets/postgres.png" alt="PostgreSQL">
-          <img src="assets/python.png" alt="Python">
-          <img src="assets/fastapi.png" alt="FastAPI">
-          <img src="assets/mitre.png" alt="MITRE ATT&CK">
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="how">
-      <div class="section-head">
-        <p class="kicker">[ 01 ] PIPELINE</p>
-        <h2>Four steps, one pass.</h2>
-      </div>
-
-      <div class="columns four">
-        <article>
-          <span class="num">01 INGEST</span>
-          <h3>Zeek or tshark</h3>
-          <p>
-            TSV or JSON connection logs, or a live sensor. Byte offsets are
-            persisted, flow ids are deterministic and inserts are conflict-safe.
-          </p>
-        </article>
-        <article>
-          <span class="num">02 SCORE</span>
-          <h3>Six features</h3>
-          <p>
-            Inter-arrival time, forward and backward bytes, duration, ratio and
-            failed state. The autoencoder reconstructs and the error becomes a
-            probability around the 95th percentile.
-          </p>
-        </article>
-        <article>
-          <span class="num">03 MAP</span>
-          <h3>Five tactics</h3>
-          <p>
-            Explicit network rules assign a MITRE tactic only to flows above
-            the configured threshold, so every label can be explained.
-          </p>
-        </article>
-        <article>
-          <span class="num">04 SERVE</span>
-          <h3>Store and query</h3>
-          <p>
-            A PostgreSQL star schema behind a versioned <code>/v1</code> with
-            filters, keyset pagination and SQL aggregations.
-          </p>
-        </article>
-      </div>
-
-      <pre class="ascii pipeline-art" data-ascii="pipeline"></pre>
-    </section>
-
-    <section class="section" id="detects">
-      <div class="section-head">
-        <p class="kicker">[ 02 ] DETECTIONS</p>
-        <h2>What it maps.</h2>
-      </div>
-
-      <table class="data tactics">
-        <thead>
-          <tr>
-            <th>Tactic</th>
-            <th>ID</th>
-            <th>Signal</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Exfiltration</td>
-            <td class="mono">TA0010</td>
-            <td>Completed connection, outbound ratio above 0.60 and forward volume above 25 KB.</td>
-          </tr>
-          <tr>
-            <td>Lateral Movement</td>
-            <td class="mono">TA0008</td>
-            <td>Private source and destination on SSH, RDP, SMB, WinRM or RPC.</td>
-          </tr>
-          <tr>
-            <td>Impact</td>
-            <td class="mono">TA0040</td>
-            <td>Inter-arrival under 2 ms with a failed or abnormal connection state.</td>
-          </tr>
-          <tr>
-            <td>Reconnaissance</td>
-            <td class="mono">TA0043</td>
-            <td>Connection attempt or rejection, no response bytes and short duration.</td>
-          </tr>
-          <tr>
-            <td>Command and Control</td>
-            <td class="mono">TA0011</td>
-            <td>Low-volume short-interval traffic or common C2 ports.</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p class="fineprint">
-        Rules are evaluated only for flows above <code>epsilon</code>. They are
-        deliberately simple, documented in the repository and testable.
+    <section class="lp-hero">
+      <p class="lp-hero-text">
+        Vortemis reads the connection logs your network already produces, scores
+        every flow and flags the anomalies with a MITRE ATT&amp;CK tactic. It
+        never touches your traffic.
       </p>
-
-      <div class="live-block">
-        <div class="panel-head">
-          <h2>Live detections</h2>
-          <span class="mono muted" id="live-stamp">WAITING FOR TELEMETRY</span>
-        </div>
-
-        <p class="mono muted live-pipeline" id="live-pipeline"></p>
-
-        <div class="live-grid three">
-          <section class="panel">
-            <div class="panel-head">
-              <h2>By tactic</h2>
-              <span class="mono muted">THRESHOLD 0.70</span>
-            </div>
-            <ol class="rank" id="live-tactics"></ol>
-            <div class="live-kpis">
-              <div><span>FLOWS</span><strong id="live-flows">…</strong></div>
-              <div><span>ANOMALIES</span><strong id="live-anomalies">…</strong></div>
-              <div><span>ANOMALY RATE</span><strong id="live-rate">…</strong></div>
-              <div><span>FLOWS / S</span><strong id="live-throughput">…</strong></div>
-            </div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-head">
-              <h2>Anomalies over time</h2>
-              <span class="mono muted">30S BUCKETS</span>
-            </div>
-            <div class="live-chart" id="live-chart"></div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-head">
-              <h2>Top destinations</h2>
-              <span class="mono muted">RECENT SAMPLE</span>
-            </div>
-            <ol class="rank" id="live-destinations"></ol>
-          </section>
-        </div>
-
-        <div class="live-grid">
-          <section class="panel">
-            <div class="panel-head">
-              <h2>Live stream</h2>
-              <span class="mono muted">ALL RECENT FLOWS</span>
-            </div>
-            <div class="table-wrap">
-              <table class="data streams">
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>Flow</th>
-                    <th class="num">P</th>
-                    <th>Tactic</th>
-                  </tr>
-                </thead>
-                <tbody id="live-stream"></tbody>
-              </table>
-            </div>
-          </section>
-
-          <section class="panel">
-            <div class="panel-head">
-              <h2>Recent detections</h2>
-              <span class="mono muted" id="live-count">—</span>
-            </div>
-            <div class="table-wrap">
-              <table class="data streams">
-                <thead>
-                  <tr>
-                    <th>Time</th>
-                    <th>Flow</th>
-                    <th class="num">P</th>
-                    <th>Tactic</th>
-                  </tr>
-                </thead>
-                <tbody id="landing-detections"></tbody>
-              </table>
-            </div>
-          </section>
-        </div>
-
-        <div id="detection-detail" class="detection-detail" hidden></div>
+      <div class="lp-hero-art">
+        <img src="assets/vortemis1.svg" alt="Vortemis">
+        <span class="lp-hero-caption mono">ILLUSTRATION &middot; RESERVED</span>
       </div>
     </section>
 
-    <section class="section" id="console">
-      <div class="section-head center">
-        <p class="kicker">[ 03 ] CONSOLE</p>
-        <h2>The reference client.</h2>
-      </div>
+    <div class="lp-divider" aria-hidden="true">~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~</div>
 
-      <figure class="shot">
-        <div class="shot-frame">
-          <img src="assets/console-overview.png" alt="Vortemis console overview" onerror="this.remove()">
-          <span class="mono">[ SCREENSHOT ] CONSOLE / OVERVIEW</span>
-        </div>
-        <figcaption class="mono">[ FIG. 02 ] RUNNING CONSOLE · 1600 × 1000</figcaption>
-      </figure>
-
-      <div class="columns">
-        <article>
-          <span class="num">OVERVIEW</span>
-          <h3>Flows, anomalies, tactics</h3>
-          <p>Totals, anomaly rate, tactic distribution, top sources and a five-minute timeline.</p>
-        </article>
-        <article>
-          <span class="num">FLOWS</span>
-          <h3>Forensic table</h3>
-          <p>Filter by tactic, protocol, source and probability with cursor pagination.</p>
-        </article>
-        <article>
-          <span class="num">ADMIN</span>
-          <h3>Operator actions</h3>
-          <p>Telemetry purge and password rotation, restricted to the admin role.</p>
-        </article>
+    <section class="lp-tech">
+      <h2 class="lp-title">Technologies.</h2>
+      <pre class="lp-ascii lp-python" aria-hidden="true">                 .:::-========-:::..
+               :-----======----------:.
+              ---:   .===--------------:
+              --=:   .=---:-----------::
+              ======-=--------------:::.
+              .......     .:------:::.:.
+      ..:::::::::..........-----::::::::  ......
+   :---========---------------::::::::::  :::::::::
+ .---=======--::------------::::::::::::  ::::::::::
+ --=======---------------:::::::::::::::  :::::::::::
+:=======---------------:::.::::::::::::  .:::::::::::.
+-=====---------------::::::::::::::::.   :::::::::::::
+====----------::    ..............    .:::::::::::::::
+-=-----------.   ...::::::::::::::::::::::::::::::::::
+:-:---------:  .::::::::::::::::::::::::::::::::::::::
+ :----------  .::::::::::::::::::::::::::::::::::::::
+ .--------::  ::::::::::::::::::::::::::::::::::::::.
+  .:----::::  ::::::::::::::::::::::::::::::::::::.
+     .:.....  :::::::::::::.....................
+              .::::::::::::
+              .:::::::::::::::::::::::::
+              ::::::::::::::::::.   .:::
+              .:::::::::::::::::    .:::
+               .::::::::::::::::::.:::.
+                  ...:::::::::::::.:.</pre>
+      <h3 class="lp-subtitle">Python</h3>
+      <p class="lp-desc">
+        Runs the engine end to end: log ingestion, feature extraction, scoring
+        and the API process itself.
+      </p>
+      <div class="lp-tech-rule" aria-hidden="true">
+        <span>~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~</span>
+        <span>~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~~~~.~~~*~~~+~~~.~~~*~~~[=+=]~~~.~~~*~~~+~~~</span>
       </div>
     </section>
 
-    <section class="section" id="interfaces">
-      <div class="section-head">
-        <p class="kicker">[ 04 ] INTERFACES</p>
-        <h2>Everything goes through one contract.</h2>
-      </div>
-
-      <div class="interfaces">
-        <div>
-          <h3>HTTP /v1</h3>
-          <ul class="endpoints">
-            <li><span class="method">GET</span> /v1/health</li>
-            <li><span class="method">POST</span> /v1/auth/login</li>
-            <li><span class="method">POST</span> /v1/auth/refresh</li>
-            <li><span class="method">GET</span> /v1/flows</li>
-            <li><span class="method">GET</span> /v1/stats/summary</li>
-            <li><span class="method">GET</span> /v1/stats/top-sources</li>
-            <li><span class="method">GET</span> /v1/stats/timeline</li>
-            <li><span class="method">GET</span> /v1/engine/metadata</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3>Access</h3>
+    <section class="lp-arch">
+      <div class="lp-row-2">
+        <article class="lp-item">
+          <pre class="lp-ascii lp-icon" aria-hidden="true">              .
+           ..::
+         ..:::.
+       .::::.      :::
+     .::::.        ...
+   .::::.               .:.
+  ::::.                .::::
+ ::::                    :.::
+::.:                      :.:.
+:.::                      ::::
+:::.                      ::::
+.:.:                      :.:.
+ ::::                    ::::
+  ::::.                .::::
+   .::::.            .::::.
+      ..:::::::.:::::::.
+          ..:::::.:..</pre>
+          <h3>PyTorch</h3>
           <p>
-            Operators authenticate against the engine. The API returns a
-            bearer access token for fifteen minutes and a refresh token for
-            thirty days; rotation revokes the previous pair and reusing an old
-            refresh token closes the session.
+            Runs the autoencoder that reconstructs each six-feature flow and
+            returns the anomaly probability.
           </p>
+        </article>
+        <article class="lp-item">
+          <pre class="lp-ascii lp-icon" aria-hidden="true">      .:-
+    .:..-
+  ::.   ..................-:.
+:-.                      ::
+ .:..   ............
+    .:..-.      .-=:
+      .:-      .-:
+             .--
+           .-:.      -:.
+          -=:        -..:.
+         .............   .::.
+   .:                      .-:
+  --..................   .::
+                     -..:.
+                     -:.</pre>
+          <h3>Zeek</h3>
           <p>
-            The OpenAPI document ships as an asset with every release, so a
-            frontend can pin a version and generate its client from it.
+            Supplies conn.log from the sensor. The engine reads the log, never
+            the packets.
           </p>
-        </div>
+        </article>
+      </div>
 
-        <div>
-          <h3>Other surfaces</h3>
-          <ul class="endpoints">
-            <li><span class="method">TUI</span> python -m vortemis.entrypoints.tui</li>
-            <li><span class="method">CLI</span> python -m vortemis.entrypoints.cli</li>
-            <li><span class="method">DOCS</span> /docs on the API process</li>
-          </ul>
-        </div>
+      <div class="lp-row-3">
+        <article class="lp-item">
+          <div class="lp-rule mono" aria-hidden="true">~~~.~~~*~~~[=+=]~~~.~~~</div>
+          <pre class="lp-ascii lp-icon" aria-hidden="true">   ....... ...... .:::...
+ ..-----=:.:------:.:-=--:.
+:.-=====:.==========-.:=== :
+:.=-==== :::.-====-::: -=- :
+:.-===== --:: ====- -- -=.:
+ ..====- -=== -====.:= =:..
+ :.-=-=- -==:.======.:....
+  :.-===- :: :=======. .:  .
+   ..--:....: :=====- ::...:
+      ......:.:=====:.
+             .:=====.:
+             ..-===-..
+              ..::..</pre>
+          <h3>PostgreSQL</h3>
+          <p>
+            Stores every scored flow in a star schema and answers the filters,
+            aggregates and timeline.
+          </p>
+        </article>
+        <article class="lp-item">
+          <div class="lp-rule mono" aria-hidden="true">~~~.~~~*~~~[=+=]~~~.~~~</div>
+          <pre class="lp-attack" aria-hidden="true">ATT&amp;CK</pre>
+          <h3>MITRE ATT&amp;CK</h3>
+          <p>
+            Provides the tactic vocabulary. Explicit rules label a flow only
+            when it crosses the threshold.
+          </p>
+        </article>
+        <article class="lp-item">
+          <div class="lp-rule mono" aria-hidden="true">~~~.~~~*~~~[=+=]~~~.~~~</div>
+          <pre class="lp-ascii lp-icon" aria-hidden="true">       ...::::::...
+    ..:::::::.::::::..
+  .:::::::::  :::::::::.
+ .:::::::::  .::::::::::.
+.:::::::::   .::::.::::::.
+::::::::.         .:::::::
+:::::::.         .::::::::
+.:::::::::::.   .::::::::.
+ .::::::::::.  .::::::::.
+  .:::::::::. :::::::::.
+    ..::::::.:::::::..
+       ...::::::...</pre>
+          <h3>FastAPI</h3>
+          <p>
+            Serves the versioned /v1 contract, the OpenAPI document and the
+            authenticated operator endpoints.
+          </p>
+        </article>
       </div>
     </section>
-
-    <section class="section" id="run">
-      <div class="section-head">
-        <p class="kicker">[ 05 ] RUN IT</p>
-        <h2>Two containers and a database.</h2>
-      </div>
-
-      <div class="run">
-        <pre class="code">git clone https://github.com/Geovanny001/Vortemis.io.git
-cd Vortemis.io
-docker compose up --build
-
-# console  http://localhost:8501
-# api      http://localhost:8000
-# docs     http://localhost:8000/docs</pre>
-
-        <ul class="requirements">
-          <li><span>Runtime</span><b>Python 3.14 or Docker</b></li>
-          <li><span>Storage</span><b>PostgreSQL 16</b></li>
-          <li><span>Telemetry</span><b>Zeek conn.log or tshark</b></li>
-          <li><span>Model</span><b>Shipped checkpoint</b></li>
-          <li><span>Schema</span><b>Alembic migrations</b></li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="section" id="faq">
-      <div class="section-head">
-        <p class="kicker">[ 06 ] FAQ</p>
-        <h2>Questions we get.</h2>
-      </div>
-
-      <div class="faq">
-        <details>
-          <summary>Does it inspect payloads?</summary>
-          <p>No. Vortemis only reads connection metadata: addresses, ports, bytes, duration, inter-arrival time and connection state.</p>
-        </details>
-        <details>
-          <summary>Where does detection run?</summary>
-          <p>On the engine, next to the database. Presentations consume HTTP and never touch the model or PostgreSQL.</p>
-        </details>
-        <details>
-          <summary>Is the model calibrated for real traffic?</summary>
-          <p>Not yet. The current checkpoint is a documented baseline; calibration and behavioural features are an open workstream.</p>
-        </details>
-        <details>
-          <summary>Can a frontend use it?</summary>
-          <p>Yes. The contract is versioned, documented and shipped as an OpenAPI file with every release.</p>
-        </details>
-        <details>
-          <summary>What happens if the log is truncated or rotated?</summary>
-          <p>The ingestion checkpoint detects it and restarts from the beginning. Deterministic flow ids prevent duplicates.</p>
-        </details>
-      </div>
-    </section>
-
-    <pre class="ascii stars wide" data-ascii="stars" aria-hidden="true"></pre>
-
-    <section class="access" id="access">
-      <div>
-        <p class="kicker">[ 07 ] ACCESS</p>
-        <h2>Operator access.</h2>
-      </div>
-      <button class="login-cta" data-goto="login">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">
-          <path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/>
-          <path d="M3 12h11"/>
-          <path d="M10 8l4 4-4 4"/>
-        </svg>
-        SIGN IN
-      </button>
-    </section>
-
-    <footer class="site-footer">
-      <div>
-        <span>ENGINE</span>
-        <a href="https://github.com/Geovanny001/Vortemis.io" target="_blank" rel="noreferrer">SOURCE</a>
-        <a href="https://github.com/Geovanny001/Vortemis.io/blob/develop/docs/CONTRACTS.md" target="_blank" rel="noreferrer">CONTRACT</a>
-        <a href="https://github.com/Geovanny001/Vortemis.io/releases" target="_blank" rel="noreferrer">RELEASES</a>
-      </div>
-      <div>
-        <span>RUNTIME</span>
-        <span>PYTHON 3.14</span>
-        <span>POSTGRESQL 16</span>
-        <span>FASTAPI</span>
-      </div>
-      <div>
-        <span>STATE</span>
-        <span>ACTIVE DEVELOPMENT</span>
-        <span id="api-label"></span>
-      </div>
-    </footer>
   </div>
 
   <section id="login" class="login" hidden>
@@ -703,7 +428,6 @@ docker compose up --build
 
   <div class="toasts" id="toasts" aria-live="polite"></div>
 
-  <script type="module" src="js/landing-detections.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>
