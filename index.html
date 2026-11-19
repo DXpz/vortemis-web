@@ -184,6 +184,58 @@
         Rules are evaluated only for flows above <code>epsilon</code>. They are
         deliberately simple, documented in the repository and testable.
       </p>
+
+      <div class="live-block">
+        <div class="panel-head">
+          <h2>Live detections</h2>
+          <span class="mono muted" id="live-stamp">WAITING FOR TELEMETRY</span>
+        </div>
+
+        <div class="live-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>By tactic</h2>
+              <span class="mono muted">THRESHOLD 0.70</span>
+            </div>
+            <ol class="rank" id="live-tactics"></ol>
+            <div class="live-kpis">
+              <div><span>FLOWS</span><strong id="live-flows">…</strong></div>
+              <div><span>ANOMALIES</span><strong id="live-anomalies">…</strong></div>
+              <div><span>RATE</span><strong id="live-rate">…</strong></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Anomalies over time</h2>
+              <span class="mono muted">30S BUCKETS</span>
+            </div>
+            <div class="live-chart" id="live-chart"></div>
+          </section>
+        </div>
+
+        <section class="panel live-recent">
+          <div class="panel-head">
+            <h2>Recent detections</h2>
+            <span class="mono muted" id="live-count">—</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data flows">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Source</th>
+                  <th>Destination</th>
+                  <th>Proto</th>
+                  <th class="num">P(anomaly)</th>
+                  <th>Tactic</th>
+                </tr>
+              </thead>
+              <tbody id="landing-detections"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </section>
 
     <section class="section" id="console">
@@ -603,6 +655,7 @@ docker compose up --build
 
   <div class="toasts" id="toasts" aria-live="polite"></div>
 
+  <script type="module" src="js/landing-detections.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

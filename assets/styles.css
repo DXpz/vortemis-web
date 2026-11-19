@@ -1448,3 +1448,65 @@ main {
 #view-live .panel {
   padding-bottom: 6px;
 }
+
+.live-block {
+  margin-top: 56px;
+  border-top: 1px solid var(--rule);
+  padding-top: 22px;
+}
+
+.live-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 56px;
+  margin-top: 26px;
+}
+
+.live-kpis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 34px;
+  margin-top: 22px;
+}
+
+.live-kpis div {
+  display: grid;
+  gap: 2px;
+}
+
+.live-kpis span {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+.live-kpis strong {
+  font-family: var(--display);
+  font-size: 34px;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--text);
+}
+
+.live-chart {
+  margin-top: 16px;
+}
+
+.live-chart svg {
+  display: block;
+  width: 100%;
+  height: 150px;
+}
+
+.live-recent {
+  margin-top: 26px;
+}
+
+@media (max-width: 900px) {
+  .live-grid {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+}
