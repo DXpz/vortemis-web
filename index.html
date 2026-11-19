@@ -181,6 +181,82 @@
         </article>
       </div>
     </section>
+
+    <section class="lp-live">
+      <h2 class="lp-title">Telemetry.</h2>
+      <div class="live-block">
+        <div class="panel-head">
+          <span class="mono muted" id="live-pipeline"></span>
+          <span class="mono muted" id="live-stamp">WAITING FOR TELEMETRY</span>
+        </div>
+
+        <div class="live-grid three">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>By tactic</h2>
+              <span class="mono muted">THRESHOLD 0.70</span>
+            </div>
+            <ol class="rank" id="live-tactics"></ol>
+            <div class="live-kpis">
+              <div><span>FLOWS</span><strong id="live-flows">…</strong></div>
+              <div><span>ANOMALIES</span><strong id="live-anomalies">…</strong></div>
+              <div><span>ANOMALY RATE</span><strong id="live-rate">…</strong></div>
+              <div><span>FLOWS / S</span><strong id="live-throughput">…</strong></div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Anomalies over time</h2>
+              <span class="mono muted">30S BUCKETS</span>
+            </div>
+            <div class="live-chart" id="live-chart"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Top destinations</h2>
+              <span class="mono muted">RECENT SAMPLE</span>
+            </div>
+            <ol class="rank" id="live-destinations"></ol>
+          </section>
+        </div>
+
+        <div class="live-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Live stream</h2>
+              <span class="mono muted">ALL RECENT FLOWS</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data streams">
+                <thead>
+                  <tr><th>Time</th><th>Flow</th><th class="num">P</th><th>Tactic</th></tr>
+                </thead>
+                <tbody id="live-stream"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h2>Recent detections</h2>
+              <span class="mono muted" id="live-count">—</span>
+            </div>
+            <div class="table-wrap">
+              <table class="data streams">
+                <thead>
+                  <tr><th>Time</th><th>Flow</th><th class="num">P</th><th>Tactic</th></tr>
+                </thead>
+                <tbody id="landing-detections"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div id="detection-detail" class="detection-detail" hidden></div>
+      </div>
+    </section>
   </div>
 
   <section id="login" class="login" hidden>
@@ -428,6 +504,7 @@
 
   <div class="toasts" id="toasts" aria-live="polite"></div>
 
+  <script type="module" src="js/landing-detections.js"></script>
   <script type="module" src="js/app.js"></script>
 </body>
 </html>

@@ -1841,3 +1841,17 @@ main {
     margin-top: 64px;
   }
 }
+
+.lp-live {
+  margin: 0 auto;
+  max-width: 1120px;
+  padding: 24px 24px 120px;
+}
+
+.lp-live .lp-title {
+  margin-bottom: 36px;
+}
+
+.lp-live .live-block {
+  margin-top: 0;
+}
