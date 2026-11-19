@@ -1403,3 +1403,48 @@ main {
     opacity: 0.3;
   }
 }
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+}
+
+.live-badge.is-idle {
+  color: var(--faint);
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 6px var(--ok);
+  animation: live-pulse 1.6s ease-in-out infinite;
+}
+
+.live-badge.is-idle .live-dot {
+  background: var(--faint);
+  box-shadow: none;
+  animation: none;
+}
+
+@keyframes live-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
+}
+
+#view-live .panel {
+  padding-bottom: 6px;
+}

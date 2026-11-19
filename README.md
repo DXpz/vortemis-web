@@ -28,6 +28,17 @@ http://127.0.0.1:8080/?api=http://192.168.1.20:8000
 localStorage.setItem("vortemis.api", "https://api.example.com");
 ```
 
+## Live demo
+
+The console polls the API every three seconds while an operator is signed in.
+The **LIVE** tab shows a feed of detections above `0.70`, the masthead badge
+reports how recently the newest flow arrived, and the overview timeline uses
+thirty-second buckets.
+
+To drive a demonstration, run the engine's `scripts/demo_simulator.py`, which
+appends scripted benign traffic plus the five MITRE tactics to the ingestion log
+with current timestamps.
+
 ## Allow the origin in the API
 
 The API enforces an explicit CORS allowlist:
@@ -75,7 +86,7 @@ js/
 - `home`: informational landing with the ASCII flow map, pipeline, detections,
   console preview, interfaces, run instructions and FAQ.
 - `login`: operator sign-in.
-- `app`: the console itself, with overview, flows and admin tabs.
+- `app`: the console itself, with overview, live, flows and admin tabs.
 
 ## Artwork
 

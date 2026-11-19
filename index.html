@@ -399,6 +399,10 @@ docker compose up --build
       <div class="masthead-top">
         <div class="wordmark">VORTEMIS<span>.IO</span></div>
         <div class="masthead-meta">
+          <span id="live-badge" class="live-badge" hidden>
+            <span class="live-dot"></span>
+            <span id="live-label">LIVE</span>
+          </span>
           <span id="engine-badge" class="mono">engine …</span>
           <span id="user-label" class="mono"></span>
           <button class="link" id="logout">SIGN OUT</button>
@@ -407,8 +411,9 @@ docker compose up --build
 
       <nav class="nav" aria-label="Sections">
         <button class="nav-item is-active" data-view="overview">01 — OVERVIEW</button>
-        <button class="nav-item" data-view="flows">02 — FLOWS</button>
-        <button class="nav-item" id="tab-admin" data-view="admin" hidden>03 — ADMIN</button>
+        <button class="nav-item" data-view="live">02 — LIVE</button>
+        <button class="nav-item" data-view="flows">03 — FLOWS</button>
+        <button class="nav-item" id="tab-admin" data-view="admin" hidden>04 — ADMIN</button>
       </nav>
     </header>
 
@@ -453,13 +458,37 @@ docker compose up --build
         <section class="panel wide">
           <div class="panel-head">
             <h2>Timeline</h2>
-            <span class="mono muted">FIVE-MINUTE BUCKETS · ANOMALIES ABOVE 0.70</span>
+            <span class="mono muted">THIRTY-SECOND BUCKETS · ANOMALIES ABOVE 0.70</span>
           </div>
           <div class="chart-host" id="timeline-host"></div>
           <div class="chart-axis mono" id="timeline-axis">
             <span id="axis-start"></span>
             <span id="axis-peak"></span>
             <span id="axis-end"></span>
+          </div>
+        </section>
+      </section>
+
+      <section class="view" id="view-live" hidden>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Detection feed</h2>
+            <span class="mono muted" id="live-status">AUTO-REFRESH · 3S · THRESHOLD 0.70</span>
+          </div>
+          <div class="table-wrap">
+            <table class="data flows">
+              <thead>
+                <tr>
+                  <th>Time</th>
+                  <th>Source</th>
+                  <th>Destination</th>
+                  <th>Proto</th>
+                  <th class="num">P(anomaly)</th>
+                  <th>Tactic</th>
+                </tr>
+              </thead>
+              <tbody id="live-body"></tbody>
+            </table>
           </div>
         </section>
       </section>
